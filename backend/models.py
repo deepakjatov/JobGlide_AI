@@ -1,7 +1,9 @@
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
+
+# ─────────────────────────── Job Search ───────────────────────────
 
 class JobFilter(BaseModel):
     keywords: List[str]
@@ -13,6 +15,7 @@ class JobFilter(BaseModel):
     job_types: List[str] = []
     experience_levels: List[str] = []
     workplace_types: List[str] = []
+    force_refresh: bool = False
 
 
 class Job(BaseModel):
@@ -35,3 +38,75 @@ class JobSearchResponse(BaseModel):
     total: int
     sources_searched: List[str]
     cached: bool = False
+
+
+# ─────────────────────────── User Profile ───────────────────────────
+
+class WorkExperience(BaseModel):
+    company: str = ""
+    role: str = ""
+    duration: str = ""
+    description: str = ""
+
+
+class UserProfile(BaseModel):
+    name: str = ""
+    email: str = ""
+    phone: str = ""
+    location: str = ""
+    linkedin_url: str = ""
+    github_url: str = ""
+    portfolio_url: str = ""
+    skills: List[str] = []
+    resume_text: str = ""
+    resume_filename: str = ""
+    work_experience: List[WorkExperience] = []
+    # LLM settings
+    llm_provider: str = "ollama"   # "ollama" | "openai" | "gemini"
+    llm_model: str = "qwen2.5:14b"
+
+
+# ─────────────────────────── Applications ───────────────────────────
+
+class Application(BaseModel):
+    id: str
+    job_id: str = ""
+    job_title: str
+    company: str
+    apply_url: str = ""
+    source: str = ""
+    status: str = "applied"  # applied | interview | offer | rejected
+    applied_at: str
+    cover_letter: str = ""
+    notes: str = ""
+
+
+# ─────────────────────────── Apply Requests ───────────────────────────
+
+class QuickApplyRequest(BaseModel):
+    job_id: str
+    job_title: str
+    company: str
+    apply_url: str
+    source: str = ""
+
+
+class CoverLetterRequest(BaseModel):
+    job_title: str
+    company: str
+    job_description: str
+    provider: str = "ollama"   # "ollama" | "openai" | "gemini"
+    model: str = "qwen2.5:14b"
+
+
+class ApplicationUpdate(BaseModel):
+    status: Optional[str] = None
+    notes: Optional[str] = None
+    cover_letter: Optional[str] = None
+
+
+class AutoApplyRequest(BaseModel):
+    filters: JobFilter
+    max_applications: int = 5
+    linkedin_email: str = ""
+    linkedin_password: str = ""

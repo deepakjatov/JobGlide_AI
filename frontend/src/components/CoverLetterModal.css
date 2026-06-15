@@ -1,0 +1,191 @@
+.cl-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 1rem;
+}
+
+.cl-modal {
+  background: rgba(14,8,36,0.98);
+  border: 1px solid rgba(124,58,237,0.35);
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,58,237,0.1);
+  animation: modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.cl-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem 1.75rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.cl-title-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.cl-sparkle {
+  font-size: 1.8rem;
+  margin-top: 2px;
+  filter: drop-shadow(0 0 8px rgba(167,139,250,0.6));
+}
+
+.cl-title-group h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.25rem;
+  background: linear-gradient(135deg, #a78bfa, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cl-subtitle {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+  margin: 0;
+}
+
+.cl-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.15s;
+}
+.cl-close:hover { color: #f87171; }
+
+.cl-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 1.25rem 1.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.cl-textarea {
+  flex: 1;
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.85rem;
+  padding: 1rem 1.15rem;
+  color: rgba(255,255,255,0.88);
+  font-size: 0.9rem;
+  font-family: 'Georgia', serif;
+  line-height: 1.7;
+  resize: none;
+  box-sizing: border-box;
+  min-height: 280px;
+  transition: border-color 0.2s;
+  overflow-y: auto;
+}
+
+.cl-textarea:focus {
+  outline: none;
+  border-color: rgba(124,58,237,0.5);
+}
+
+.cl-textarea.streaming {
+  caret-color: transparent;
+}
+
+.cl-cursor-blink {
+  display: inline-block;
+  width: 2px; height: 1.1em;
+  background: #a78bfa;
+  margin-left: 2px;
+  animation: blink 0.8s step-end infinite;
+  vertical-align: text-bottom;
+  position: absolute;
+  bottom: 2rem;
+  left: calc(1.75rem + 1rem);
+}
+
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+.cl-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1.75rem;
+  text-align: center;
+}
+
+.cl-error span { font-size: 2rem; }
+.cl-error p { color: #fca5a5; font-size: 0.9rem; line-height: 1.5; }
+.cl-error button {
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #f87171;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.cl-error button:hover { background: rgba(239,68,68,0.25); }
+
+.cl-footer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.75rem 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.cl-btn {
+  flex: 1;
+  padding: 0.7rem 0;
+  border-radius: 0.75rem;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cl-btn-regen {
+  background: rgba(124,58,237,0.2);
+  border: 1px solid rgba(124,58,237,0.4);
+  color: #a78bfa;
+}
+.cl-btn-regen:hover:not(:disabled) { background: rgba(124,58,237,0.35); }
+
+.cl-btn-copy {
+  background: rgba(0,212,255,0.15);
+  border: 1px solid rgba(0,212,255,0.3);
+  color: #00d4ff;
+}
+.cl-btn-copy:hover:not(:disabled) { background: rgba(0,212,255,0.25); }
+
+.cl-btn-close {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.5);
+}
+.cl-btn-close:hover { background: rgba(255,255,255,0.1); }
+
+.cl-btn:disabled { opacity: 0.4; cursor: not-allowed; }

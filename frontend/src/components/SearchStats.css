@@ -76,3 +76,28 @@
     height: 18px;
   }
 }
+
+.btn-refresh-scrape {
+  background: rgba(124, 58, 237, 0.12);
+  color: #a78bfa;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  margin-left: 20px;
+  transition: all 0.2s ease;
+}
+
+.btn-refresh-scrape:hover {
+  background: linear-gradient(135deg, #7c3aed, #00d4ff);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+}
+
+.btn-refresh-scrape:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}

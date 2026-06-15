@@ -4,8 +4,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config import settings
 from routers.jobs import router as jobs_router
+from routers.apply import router as apply_router
 
-app = FastAPI(title="Job Apply Agent API")
+from services.db import initialize_db
+
+app = FastAPI(title="JobGlide AI API")
+
+@app.on_event("startup")
+def on_startup():
+    initialize_db()
 
 # CORS configuration
 origins = [o.strip() for o in settings.ALLOW_ORIGINS.split(",") if o.strip()]
@@ -19,6 +26,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(jobs_router)
+app.include_router(apply_router)
 
 
 @app.get("/")

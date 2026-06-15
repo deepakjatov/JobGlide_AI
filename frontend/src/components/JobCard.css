@@ -169,6 +169,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   margin-top: auto;
   padding-top: 6px;
 }
@@ -179,6 +180,33 @@
   color: var(--accent-green);
 }
 
+.job-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.btn-icon-action {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-icon-action:hover:not(:disabled) {
+  background: rgba(255,255,255,0.12);
+  transform: scale(1.1);
+}
+.btn-icon-action:disabled { opacity: 0.3; cursor: not-allowed; }
+
 .btn-apply {
   display: inline-flex;
   align-items: center;
@@ -187,41 +215,47 @@
   background: var(--gradient-primary);
   color: #fff;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   border-radius: 100px;
-  text-decoration: none;
-  transition: all var(--transition-fast);
   border: none;
   cursor: pointer;
-  margin-left: auto;
+  white-space: nowrap;
+  transition: all 0.2s;
 }
-
-.btn-apply:hover {
+.btn-apply:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
 }
+.btn-apply.applied {
+  background: rgba(16,185,129,0.15);
+  border: 1px solid rgba(16,185,129,0.4);
+  color: #34d399;
+  cursor: default;
+}
+.btn-apply:disabled { opacity: 0.7; cursor: wait; }
 
-.btn-apply:active {
-  transform: scale(0.97);
+.apply-arrow { transition: transform 0.2s; }
+.btn-apply:hover .apply-arrow { transform: translateX(3px); }
+
+.applied-badge {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #34d399;
+  background: rgba(16,185,129,0.12);
+  border: 1px solid rgba(16,185,129,0.3);
+  padding: 2px 10px;
+  border-radius: 99px;
 }
 
-.apply-arrow {
-  transition: transform var(--transition-fast);
-}
-
-.btn-apply:hover .apply-arrow {
-  transform: translateX(3px);
-}
+.job-card.applied { border-color: rgba(16,185,129,0.2); }
 
 @media (max-width: 600px) {
-  .job-card {
-    padding: 16px;
-  }
-  .job-card-top {
-    padding-right: 60px;
-  }
-  .job-source-badge {
-    font-size: 0.62rem;
-    padding: 2px 7px;
-  }
+  .job-card { padding: 16px; }
+  .job-card-top { padding-right: 60px; }
+  .job-source-badge { font-size: 0.62rem; padding: 2px 7px; }
+  .btn-apply { padding: 7px 12px; font-size: 0.75rem; }
 }
+

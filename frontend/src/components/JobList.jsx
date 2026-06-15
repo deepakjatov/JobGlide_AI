@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import JobCard from './JobCard';
+import { getProfile, getAppliedJobIds } from '../api/applyApi';
 import './JobList.css';
 
 const SOURCE_TABS = [
@@ -41,6 +42,13 @@ function SkeletonCard({ index }) {
 
 export default function JobList({ jobs, loading, error, onRetry, skills }) {
   const [activeSource, setActiveSource] = useState('all');
+  const [profile, setProfile] = useState(null);
+  const [appliedIds, setAppliedIds] = useState(new Set());
+
+  useEffect(() => { 
+    getProfile().then(setProfile);
+    getAppliedJobIds().then(ids => setAppliedIds(new Set(ids)));
+  }, [jobs]);
 
   const sourceCounts = useMemo(() => {
     const counts = { all: jobs.length };
@@ -129,6 +137,13 @@ export default function JobList({ jobs, loading, error, onRetry, skills }) {
             job={job}
             index={index}
             filterSkills={skills}
+            profile={profile}
+            isInitiallyApplied={appliedIds.has(job.id)}
+            onApplied={() => setAppliedIds(prev => {
+              const next = new Set(prev);
+              next.add(job.id);
+              return next;
+            })}
           />
         ))}
       </div>

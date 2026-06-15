@@ -103,11 +103,60 @@ class JobAggregator:
         self.cache = CacheManager()
 
     async def search(self, filters: JobFilter) -> JobSearchResponse:
-        # Check cache first
+        # 1. Check SQLite database first (unless force_refresh is True)
+        if not filters.force_refresh:
+            try:
+                from services.db import get_all_jobs
+                db_jobs_raw = get_all_jobs()
+                if db_jobs_raw:
+                    db_jobs = []
+                    for j in db_jobs_raw:
+                        try:
+                            db_jobs.append(Job(**j))
+                        except Exception as parse_err:
+                            print(f"[Aggregator] Failed to parse DB job row: {parse_err}")
+
+                    # Apply Unified Post-Filtering Pass
+                    filtered_jobs: List[Job] = []
+                    for job in db_jobs:
+                        # Job Freshness (Date Posted)
+                        if filters.date_posted != "anytime":
+                            days_limit = {"past_24h": 1, "past_3d": 3, "past_week": 7, "past_month": 30}.get(filters.date_posted, 30)
+                            if not _is_recent(job.posted_date, days_limit):
+                                continue
+
+                        # Job Type
+                        if filters.job_types and not _match_job_type(job.job_type, filters.job_types):
+                            continue
+
+                        # Experience Level
+                        if filters.experience_levels and not _match_experience_level(job.title, job.description, filters.experience_levels):
+                            continue
+
+                        # Workplace Type
+                        if filters.workplace_types and not _match_workplace_type(job.location, filters.workplace_types):
+                            continue
+
+                        filtered_jobs.append(job)
+
+                    if filtered_jobs:
+                        print(f"[Aggregator] Returning {len(filtered_jobs)} filtered jobs from SQLite database.")
+                        filtered_jobs.sort(key=lambda j: (j.posted_date or ""), reverse=True)
+                        filtered_jobs.sort(key=lambda j: len(j.skills_matched), reverse=True)
+                        return JobSearchResponse(
+                            jobs=filtered_jobs,
+                            total=len(filtered_jobs),
+                            sources_searched=[],
+                            cached=True,
+                        )
+            except Exception as e:
+                print(f"[Aggregator] SQLite cache lookup failed: {e}")
+
+        # 2. Check in-memory cache next
         cache_key = self.cache.make_key(filters)
         cached = self.cache.get(cache_key)
         if cached is not None:
-            print("[Aggregator] Returning cached results.")
+            print("[Aggregator] Returning in-memory cached results.")
             response = JobSearchResponse(**cached)
             response.cached = True
             return response
@@ -147,6 +196,14 @@ class JobAggregator:
             if dedup_key not in seen:
                 seen.add(dedup_key)
                 unique_jobs.append(job)
+
+        # Persist all unique aggregated jobs to SQLite database
+        try:
+            from services.db import save_jobs
+            save_jobs(unique_jobs)
+            print(f"[Aggregator] Persisted {len(unique_jobs)} unique jobs to database.")
+        except Exception as e:
+            print(f"[Aggregator] Failed to persist jobs to database: {e}")
 
         # Apply Unified Post-Filtering Pass
         filtered_jobs: List[Job] = []

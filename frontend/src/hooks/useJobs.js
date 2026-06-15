@@ -22,7 +22,7 @@ export function useJobs() {
 
   const [filtersLoaded, setFiltersLoaded] = useState(false);
 
-  const searchJobs = useCallback(async (overrideFilters) => {
+  const searchJobs = useCallback(async (overrideFilters, forceRefresh = false) => {
     setLoading(true);
     setError(null);
     try {
@@ -34,8 +34,12 @@ export function useJobs() {
         date_posted: datePosted,
         job_types: jobTypes,
         experience_levels: experienceLevels,
-        workplace_types: workplaceTypes
+        workplace_types: workplaceTypes,
+        force_refresh: forceRefresh
       };
+      if (forceRefresh) {
+        filters.force_refresh = true;
+      }
       const data = await searchJobsApi(filters);
       setJobs(data.jobs || []);
       setSearchStats({
