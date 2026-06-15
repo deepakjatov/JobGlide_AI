@@ -6,6 +6,10 @@ export function useJobs() {
   const [skills, setSkills] = useState([]);
   const [experience, setExperience] = useState('');
   const [locations, setLocations] = useState([]);
+  const [datePosted, setDatePosted] = useState('past_3d');
+  const [jobTypes, setJobTypes] = useState([]);
+  const [experienceLevels, setExperienceLevels] = useState([]);
+  const [workplaceTypes, setWorkplaceTypes] = useState(['Remote']);
 
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +26,16 @@ export function useJobs() {
     setLoading(true);
     setError(null);
     try {
-      const filters = overrideFilters || { keywords, skills, experience, locations };
+      const filters = overrideFilters || {
+        keywords,
+        skills,
+        experience,
+        locations,
+        date_posted: datePosted,
+        job_types: jobTypes,
+        experience_levels: experienceLevels,
+        workplace_types: workplaceTypes
+      };
       const data = await searchJobsApi(filters);
       setJobs(data.jobs || []);
       setSearchStats({
@@ -36,7 +49,7 @@ export function useJobs() {
     } finally {
       setLoading(false);
     }
-  }, [keywords, skills, experience, locations]);
+  }, [keywords, skills, experience, locations, datePosted, jobTypes, experienceLevels, workplaceTypes]);
 
   const loadDefaults = useCallback(async () => {
     try {
@@ -45,12 +58,31 @@ export function useJobs() {
       const sk = defaults.skills || [];
       const exp = defaults.experience || '';
       const loc = defaults.locations || [];
+      const dp = defaults.date_posted || 'past_3d';
+      const jt = defaults.job_types || [];
+      const el = defaults.experience_levels || [];
+      const wt = defaults.workplace_types || ['Remote'];
+
       setKeywords(kw);
       setSkills(sk);
       setExperience(exp);
       setLocations(loc);
+      setDatePosted(dp);
+      setJobTypes(jt);
+      setExperienceLevels(el);
+      setWorkplaceTypes(wt);
+
       setFiltersLoaded(true);
-      return { keywords: kw, skills: sk, experience: exp, locations: loc };
+      return {
+        keywords: kw,
+        skills: sk,
+        experience: exp,
+        locations: loc,
+        date_posted: dp,
+        job_types: jt,
+        experience_levels: el,
+        workplace_types: wt
+      };
     } catch (err) {
       setError(err.message);
       setFiltersLoaded(true);
@@ -122,6 +154,10 @@ export function useJobs() {
     setSkills([]);
     setExperience('');
     setLocations([]);
+    setDatePosted('anytime');
+    setJobTypes([]);
+    setExperienceLevels([]);
+    setWorkplaceTypes([]);
   }, []);
 
   const resetToResume = useCallback(async () => {
@@ -146,6 +182,10 @@ export function useJobs() {
     skills,
     experience,
     locations,
+    datePosted,
+    jobTypes,
+    experienceLevels,
+    workplaceTypes,
     filtersLoaded,
     // Job state
     jobs,
@@ -158,6 +198,10 @@ export function useJobs() {
     removeFilter,
     clearFilters,
     resetToResume,
-    setExperience
+    setExperience,
+    setDatePosted,
+    setJobTypes,
+    setExperienceLevels,
+    setWorkplaceTypes
   };
 }

@@ -30,6 +30,17 @@ class JobSpyProvider(JobProvider):
         )
         country_indeed = "USA" if is_us else "India"
 
+        # Map date_posted to hours_old
+        hours_old = None
+        if filters.date_posted == "past_24h":
+            hours_old = 24
+        elif filters.date_posted == "past_3d":
+            hours_old = 72
+        elif filters.date_posted == "past_week":
+            hours_old = 168
+        elif filters.date_posted == "past_month":
+            hours_old = 720
+
         # Search each keyword
         for keyword in filters.keywords:
             try:
@@ -41,6 +52,7 @@ class JobSpyProvider(JobProvider):
                     location=loc_str,
                     results_wanted=15,  # Moderate to avoid rate limits / IP bans
                     country_indeed=country_indeed,
+                    hours_old=hours_old,
                 )
 
                 if df is None or df.empty:

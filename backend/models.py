@@ -6,9 +6,13 @@ from pydantic import BaseModel
 class JobFilter(BaseModel):
     keywords: List[str]
     skills: List[str]
-    experience: str = "0-3"
+    experience: str = "1-2"
     locations: List[str]
     sources: Optional[List[str]] = None
+    date_posted: str = "past_3d"
+    job_types: List[str] = []
+    experience_levels: List[str] = []
+    workplace_types: List[str] = []
 
 
 class Job(BaseModel):

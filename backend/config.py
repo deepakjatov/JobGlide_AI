@@ -4,8 +4,12 @@ from pydantic_settings import BaseSettings
 DEFAULT_FILTERS = {
     "keywords": ["AI Engineer", "GenAI Engineer", "Full Stack Engineer", "Software Engineer"],
     "skills": ["React", "FastAPI", "RAG", "LLM"],
-    "experience": "0-3",
+    "experience": "1-2",
     "locations": ["Remote", "India"],
+    "date_posted": "past_3d",
+    "job_types": [],
+    "experience_levels": [],
+    "workplace_types": ["Remote"],
 }
 
 

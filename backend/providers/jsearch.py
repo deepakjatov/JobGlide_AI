@@ -33,15 +33,41 @@ class JSearchProvider(JobProvider):
                 for keyword in filters.keywords:
                     query = f'{keyword} {" ".join(filters.locations)}'
 
+                    # Map date_posted
+                    jsearch_date = "all"
+                    if filters.date_posted == "past_24h":
+                        jsearch_date = "today"
+                    elif filters.date_posted == "past_3d":
+                        jsearch_date = "3days"
+                    elif filters.date_posted == "past_week":
+                        jsearch_date = "week"
+                    elif filters.date_posted == "past_month":
+                        jsearch_date = "month"
+
+                    # Map job_types
+                    type_mapping = {
+                        "Full-time": "FULLTIME",
+                        "Part-time": "PARTTIME",
+                        "Contract": "CONTRACTOR",
+                        "Internship": "INTERN"
+                    }
+                    jsearch_types = []
+                    for jt in filters.job_types:
+                        mapped = type_mapping.get(jt)
+                        if mapped:
+                            jsearch_types.append(mapped)
+
                     params = {
                         "query": query,
-                        "date_posted": "month",
-                        "employment_types": "FULLTIME",
+                        "date_posted": jsearch_date,
                         "page": "1",
                         "num_pages": "1",
                     }
 
-                    if filters.experience == "0-3":
+                    if jsearch_types:
+                        params["employment_types"] = ",".join(jsearch_types)
+
+                    if filters.experience in ["0-1", "1-2", "0-3"]:
                         params["job_requirements"] = "under_3_years_experience"
 
                     response = await client.get(

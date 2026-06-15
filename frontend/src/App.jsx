@@ -12,6 +12,10 @@ function App() {
     skills,
     experience,
     locations,
+    datePosted,
+    jobTypes,
+    experienceLevels,
+    workplaceTypes,
     jobs,
     loading,
     error,
@@ -21,7 +25,11 @@ function App() {
     removeFilter,
     clearFilters,
     resetToResume,
-    setExperience
+    setExperience,
+    setDatePosted,
+    setJobTypes,
+    setExperienceLevels,
+    setWorkplaceTypes
   } = useJobs();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -54,9 +62,17 @@ function App() {
           skills={skills}
           experience={experience}
           locations={locations}
+          datePosted={datePosted}
+          jobTypes={jobTypes}
+          experienceLevels={experienceLevels}
+          workplaceTypes={workplaceTypes}
           onAddFilter={addFilter}
           onRemoveFilter={removeFilter}
           onSetExperience={setExperience}
+          onSetDatePosted={setDatePosted}
+          onSetJobTypes={setJobTypes}
+          onSetExperienceLevels={setExperienceLevels}
+          onSetWorkplaceTypes={setWorkplaceTypes}
           onSearch={() => {
             searchJobs();
             setSidebarOpen(false);

@@ -60,9 +60,17 @@ export default function FilterPanel({
   skills,
   experience,
   locations,
+  datePosted,
+  jobTypes,
+  experienceLevels,
+  workplaceTypes,
   onAddFilter,
   onRemoveFilter,
   onSetExperience,
+  onSetDatePosted,
+  onSetJobTypes,
+  onSetExperienceLevels,
+  onSetWorkplaceTypes,
   onSearch,
   onClear,
   onReset,
@@ -108,10 +116,104 @@ export default function FilterPanel({
           >
             <option value="">Any Experience</option>
             <option value="0-1">0-1 Years</option>
+            <option value="1-2">1-2 Years</option>
             <option value="0-3">0-3 Years</option>
             <option value="3-5">3-5 Years</option>
             <option value="5+">5+ Years</option>
           </select>
+        </div>
+
+        <div className="filter-section">
+          <label className="filter-label">
+            <span className="filter-label-emoji">🕐</span>
+            Job Freshness
+          </label>
+          <select
+            className="filter-select"
+            value={datePosted}
+            onChange={(e) => onSetDatePosted(e.target.value)}
+          >
+            <option value="anytime">Anytime</option>
+            <option value="past_24h">Past 24 hours</option>
+            <option value="past_3d">Past 3 days (Default)</option>
+            <option value="past_week">Past week</option>
+            <option value="past_month">Past month</option>
+          </select>
+        </div>
+
+        <div className="filter-section">
+          <label className="filter-label">
+            <span className="filter-label-emoji">🏢</span>
+            Workplace Type
+          </label>
+          <div className="checkbox-group">
+            {['On-site', 'Hybrid', 'Remote'].map(type => (
+              <label key={type} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={workplaceTypes.includes(type)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onSetWorkplaceTypes([...workplaceTypes, type]);
+                    } else {
+                      onSetWorkplaceTypes(workplaceTypes.filter(t => t !== type));
+                    }
+                  }}
+                />
+                <span>{type}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="filter-section">
+          <label className="filter-label">
+            <span className="filter-label-emoji">💼</span>
+            Job Type
+          </label>
+          <div className="checkbox-group">
+            {['Full-time', 'Part-time', 'Contract', 'Internship'].map(type => (
+              <label key={type} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={jobTypes.includes(type)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onSetJobTypes([...jobTypes, type]);
+                    } else {
+                      onSetJobTypes(jobTypes.filter(t => t !== type));
+                    }
+                  }}
+                />
+                <span>{type}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="filter-section">
+          <label className="filter-label">
+            <span className="filter-label-emoji">🎓</span>
+            Experience Level
+          </label>
+          <div className="checkbox-group">
+            {['Internship', 'Entry level', 'Associate', 'Mid-Senior level', 'Director', 'Executive'].map(level => (
+              <label key={level} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={experienceLevels.includes(level)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onSetExperienceLevels([...experienceLevels, level]);
+                    } else {
+                      onSetExperienceLevels(experienceLevels.filter(l => l !== level));
+                    }
+                  }}
+                />
+                <span>{level}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
         <ChipInput
